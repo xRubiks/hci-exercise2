@@ -1,0 +1,6 @@
+# IntelliJ IDEA / WebStorm / PhpStorm etc.
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
