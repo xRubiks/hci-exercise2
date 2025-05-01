@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1 - Reaction Time Test</title>
+    <style>
+        :root {
+            /* Enhanced color palette */
+            --primary: #6d28d9;
+            --primary-light: #8b5cf6;
+            --primary-dark: #5b21b6;
+            --primary-gradient: linear-gradient(135deg, #6d28d9, #8b5cf6);
+            --secondary: #f97316;
+            --secondary-light: #fb923c;
+            --secondary-dark: #ea580c;
+            --secondary-gradient: linear-gradient(135deg, #f97316, #fb923c);
+            --background: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+            --purple: #9333ea;
+            --orange: #f97316;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image:
+                    radial-gradient(circle at 20% 30%, rgba(109, 40, 217, 0.05) 0%, transparent 300px),
+                    radial-gradient(circle at 80% 70%, rgba(249, 115, 22, 0.05) 0%, transparent 300px);
+        }
+
+        .header {
+            background-image: var(--primary-gradient);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            z-index: 10;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            padding-bottom: 4rem;
+        }
+
+        .header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.025em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: -2rem auto 0;
+            padding: 0 2rem 2rem;
+            width: 100%;
+            flex: 1;
+            position: relative;
+            z-index: 20;
+        }
+
+        .test-area {
+            position: relative;
+            height: 600px;
+            border-radius: 16px;
+            background-color: var(--card);
+            border: 2px solid var(--border);
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .test-area::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background-image: var(--primary-gradient);
+            z-index: 1;
+        }
+
+        .instruction-panel {
+            background-color: var(--card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border-left: 6px solid var(--primary);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .instruction-panel::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background-image: radial-gradient(circle, rgba(109, 40, 217, 0.05) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .instruction-panel h2 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .instruction-panel h2::before {
+            content: "ℹ️";
+            margin-right: 0.75rem;
+            font-size: 1.5rem;
+        }
+
+        .instruction-panel p {
+            color: var(--text);
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .instruction-panel .key-hint {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-image: var(--primary-gradient);
+            color: white;
+            border-radius: 6px;
+            padding: 0.25rem 0.75rem;
+            margin: 0 0.25rem;
+            font-family: monospace;
+            font-weight: bold;
+            box-shadow: var(--shadow);
+            min-width: 2.25rem;
+            height: 2.25rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        #stimulus {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 2s ease, transform 0.3s ease;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background-color: var(--card);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.02) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .result-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-card .label {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-card .value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.025em;
+        }
+
+        .result-card .description {
+            margin-top: 0.5rem;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .color-indicator {
+            display: inline-block;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .purple {
+            background-color: var(--purple);
+        }
+
+        .orange {
+            background-color: var(--orange);
+        }
+
+        .error-rate .value {
+            color: var(--error);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .control-hint {
+            display: flex;
+            align-items: center;
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .control-hint:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .control-hint .key {
+            background-image: var(--primary-gradient);
+            color: white;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            margin-right: 1rem;
+            font-family: monospace;
+            font-weight: bold;
+            min-width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px;
+            background-color: var(--card);
+            box-shadow: var(--shadow-md);
+            font-weight: 600;
+            font-size: 0.875rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 10;
+        }
+
+        .status-indicator.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .status-indicator::before {
+            content: "";
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            background-color: var(--success);
+            margin-right: 0.75rem;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        .shape-examples {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+            justify-content: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .shape-example {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 0.75rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
+        }
+
+        .shape-example:hover {
+            transform: translateY(-3px);
+        }
+
+        .shape-example .shape-container {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .shape-example .shape-label {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .shape-example .color-label {
+            font-weight: 500;
+            color: var(--text-light);
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shape-example .shape-action {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.125rem;
+            font-weight: 500;
+        }
+
+        .shape-example.correct .shape-action {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .shape-example.incorrect .shape-action {
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        .footer {
+            background-color: var(--card);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-top: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .rule-highlight {
+            background-color: rgba(109, 40, 217, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.5s ease forwards;
+        }
+
+        /* Enhanced stimulus animations */
+        @keyframes stimulusAppear {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .stimulus-appear {
+            animation: stimulusAppear 0.3s ease forwards;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 1rem 3.5rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 1rem 1.5rem;
+                margin-top: -1.5rem;
+            }
+
+            .test-area {
+                height: 450px;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .shape-examples {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Reaction Time Test</h1>
+    <p>Test your reaction time to different visual stimuli</p>
+</div>
+
+<div class="container">
+    <div class="instruction-panel scale-in">
+        <h2 id="instruction">Press space to start!</h2>
+        <p>In this test, you will see squares and triangles in purple or orange colors.</p>
+
+        <div class="rule-highlight">
+            <strong>Important:</strong> Press space ONLY when you see a SQUARE (regardless of color). Do NOT press for triangles.
+        </div>
+
+        <div class="shape-examples">
+            <!-- Purple Square - Correct response -->
+            <div class="shape-example correct">
+                <div class="shape-container">
+                    <svg width="40" height="40">
+                        <rect x="0" y="0" width="40" height="40" fill="#9333ea"></rect>
+                    </svg>
+                </div>
+                <div class="shape-label">Square</div>
+                <div class="color-label">
+                    <span class="color-dot purple"></span>Purple
+                </div>
+                <div class="shape-action">Press ✓</div>
+            </div>
+
+            <!-- Orange Square - Correct response -->
+            <div class="shape-example correct">
+                <div class="shape-container">
+                    <svg width="40" height="40">
+                        <rect x="0" y="0" width="40" height="40" fill="#f97316"></rect>
+                    </svg>
+                </div>
+                <div class="shape-label">Square</div>
+                <div class="color-label">
+                    <span class="color-dot orange"></span>Orange
+                </div>
+                <div class="shape-action">Press ✓</div>
+            </div>
+
+            <!-- Purple Triangle - Incorrect response -->
+            <div class="shape-example incorrect">
+                <div class="shape-container">
+                    <svg width="40" height="40">
+                        <polygon points="20,0 40,40 0,40" fill="#9333ea"></polygon>
+                    </svg>
+                </div>
+                <div class="shape-label">Triangle</div>
+                <div class="color-label">
+                    <span class="color-dot purple"></span>Purple
+                </div>
+                <div class="shape-action">Don't ✗</div>
+            </div>
+
+            <!-- Orange Triangle - Incorrect response -->
+            <div class="shape-example incorrect">
+                <div class="shape-container">
+                    <svg width="40" height="40">
+                        <polygon points="20,0 40,40 0,40" fill="#f97316"></polygon>
+                    </svg>
+                </div>
+                <div class="shape-label">Triangle</div>
+                <div class="color-label">
+                    <span class="color-dot orange"></span>Orange
+                </div>
+                <div class="shape-action">Don't ✗</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-area scale-in">
+        <svg id="stimulus"></svg>
+        <div class="status-indicator" id="status">Test Active</div>
+    </div>
+
+    <div class="results-grid">
+        <div class="result-card">
+            <div class="label"><span class="color-indicator purple"></span>Purple Squares</div>
+            <div class="value" id="meanPurple">-</div>
+            <div class="description">Average reaction time in milliseconds</div>
+        </div>
+        <div class="result-card">
+            <div class="label"><span class="color-indicator purple"></span>Purple Squares SD</div>
+            <div class="value" id="sdPurple">-</div>
+            <div class="description">Standard deviation in milliseconds</div>
+        </div>
+        <div class="result-card">
+            <div class="label"><span class="color-indicator orange"></span>Orange Squares</div>
+            <div class="value" id="meanOrange">-</div>
+            <div class="description">Average reaction time in milliseconds</div>
+        </div>
+        <div class="result-card">
+            <div class="label"><span class="color-indicator orange"></span>Orange Squares SD</div>
+            <div class="value" id="sdOrange">-</div>
+            <div class="description">Standard deviation in milliseconds</div>
+        </div>
+        <div class="result-card error-rate">
+            <div class="label">Error Rate</div>
+            <div class="value" id="errorRate">-</div>
+            <div class="description">Percentage of incorrect responses to triangles</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="control-hint">
+            <div class="key">Space</div>
+            <span>Press for squares only</span>
+        </div>
+        <div class="control-hint">
+            <div class="key">A</div>
+            <span>End test and see results</span>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <p>Human-Computer Interaction - Reaction Time Test &copy; 2025</p>
+</div>
+
+<script>
+    // Keeping the original logic intact
+    let experimentActive = false;
+    let stimulusIsVisible = false;
+    let expectingResponse = false;
+    let stimulusTimestamp;
+    let testStimulusTimeout;
+    let timesPurple = [];
+    let timesOrange = [];
+    let mistakes = 0;
+    let triangleCount = 0;
+    let squareCount = 0;
+    let currentStimulusType;
+    let currentStimulusColor;
+    let currentStimulusSize;
+
+    let instructionElement = document.getElementById('instruction');
+    let stimulusElement = document.getElementById('stimulus');
+    let meanPurpleElement = document.getElementById('meanPurple');
+    let sdPurpleElement = document.getElementById('sdPurple');
+    let meanOrangeElement = document.getElementById('meanOrange');
+    let sdOrangeElement = document.getElementById('sdOrange');
+    let errorRateElement = document.getElementById('errorRate');
+    let statusIndicator = document.getElementById('status');
+
+    function getRndPosition(max) {
+        return Math.floor(Math.random() * max);
+    }
+
+    function setStimulusPosition() {
+        const testArea = document.querySelector('.test-area');
+        const rect = testArea.getBoundingClientRect();
+
+        // Keep the stimulus fully within the test area
+        const maxWidth = rect.width - currentStimulusSize;
+        const maxHeight = rect.height - currentStimulusSize;
+
+        const left = getRndPosition(maxWidth);
+        const top = getRndPosition(maxHeight);
+
+        stimulusElement.style.left = left + 'px';
+        stimulusElement.style.top = top + 'px';
+    }
+
+    function getMean(data) {
+        if (data.length === 0) return 0;
+        let sum = 0;
+        for (let value of data) sum += value;
+        return sum / data.length;
+    }
+
+    function getStandardDeviation(data) {
+        if (data.length === 0) return 0;
+        let mean = getMean(data);
+        let squareSum = 0;
+        for (let value of data) squareSum += (value - mean) ** 2;
+        return Math.sqrt(squareSum / data.length);
+    }
+
+    function clearResults() {
+        meanPurpleElement.textContent = '-';
+        sdPurpleElement.textContent = '-';
+        meanOrangeElement.textContent = '-';
+        sdOrangeElement.textContent = '-';
+        errorRateElement.textContent = '-';
+        timesPurple = [];
+        timesOrange = [];
+        mistakes = 0;
+        triangleCount = 0;
+        squareCount = 0;
+    }
+
+    function showResults() {
+        let meanPurple = getMean(timesPurple);
+        let sdPurple = getStandardDeviation(timesPurple);
+        let meanOrange = getMean(timesOrange);
+        let sdOrange = getStandardDeviation(timesOrange);
+        let errorRate = triangleCount > 0 ? mistakes / (triangleCount + squareCount) : 0;
+
+        // Apply fade-in animation to results
+        const resultCards = document.querySelectorAll('.result-card');
+        resultCards.forEach((card, index) => {
+            card.style.opacity = 0;
+            setTimeout(() => {
+                card.classList.add('fade-in');
+            }, index * 150);
+        });
+
+        meanPurpleElement.textContent = Math.round(meanPurple) + ' ms';
+        sdPurpleElement.textContent = Math.round(sdPurple) + ' ms';
+        meanOrangeElement.textContent = Math.round(meanOrange) + ' ms';
+        sdOrangeElement.textContent = Math.round(sdOrange) + ' ms';
+        errorRateElement.textContent = (errorRate * 100).toFixed(1) + '%';
+    }
+
+    function startTestTrial() {
+        stimulusElement.style.opacity = 0;
+        stimulusElement.classList.remove('stimulus-appear');
+        stimulusIsVisible = false;
+        expectingResponse = false;
+
+        let timeToWaitInSeconds = Math.random() * 4 + 2; // 2 - 6s
+        testStimulusTimeout = setTimeout(showStimulus, timeToWaitInSeconds * 1000);
+    }
+
+    let currentMistakeCounted = false;
+
+    function showStimulus() {
+        currentStimulusType = Math.random() < 0.5 ? 'square' : 'triangle';
+        currentStimulusColor = Math.random() < 0.5 ? 'purple' : 'orange';
+        currentStimulusSize = Math.floor(Math.random() * 200) + 100; // 100 to 300
+
+        currentMistakeCounted = false;
+
+        stimulusElement.setAttribute('width', currentStimulusSize);
+        stimulusElement.setAttribute('height', currentStimulusSize);
+        stimulusElement.innerHTML = '';
+
+        let shape;
+        if (currentStimulusType === 'square') {
+            shape = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            shape.setAttribute('x', 0);
+            shape.setAttribute('y', 0);
+            shape.setAttribute('width', currentStimulusSize);
+            shape.setAttribute('height', currentStimulusSize);
+            squareCount++;
+        } else {
+            shape = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            const points = `0,${currentStimulusSize} ${currentStimulusSize},${currentStimulusSize} ${currentStimulusSize / 2},0`;
+            shape.setAttribute('points', points);
+            triangleCount++;
+        }
+
+        // Set the color based on the random selection
+        const colorValue = currentStimulusColor === 'purple' ?
+            getComputedStyle(document.documentElement).getPropertyValue('--purple') :
+            getComputedStyle(document.documentElement).getPropertyValue('--orange');
+
+        shape.setAttribute('fill', colorValue);
+        stimulusElement.appendChild(shape);
+
+        setStimulusPosition();
+        stimulusElement.style.opacity = 1;
+        stimulusElement.classList.add('stimulus-appear');
+        stimulusIsVisible = true;
+        expectingResponse = (currentStimulusType === 'square');
+        stimulusTimestamp = Date.now();
+
+        if (currentStimulusType === 'triangle') {
+            setTimeout(() => {
+                if (experimentActive) {
+                    startTestTrial();
+                }
+            }, (Math.random() * 3 + 1) * 1000); // 1 - 4s
+        }
+    }
+
+    function recordStimulusReactionTime() {
+        let deltaTime = Date.now() - stimulusTimestamp;
+        if (currentStimulusColor === 'purple') {
+            timesPurple.push(deltaTime);
+        } else {
+            timesOrange.push(deltaTime);
+        }
+    }
+
+    function startExperiment() {
+        clearResults();
+        instructionElement.textContent = "Press space only when a square is shown (purple or orange)";
+        statusIndicator.classList.add('active');
+        experimentActive = true;
+        startTestTrial();
+    }
+
+    function stopExperiment() {
+        clearTimeout(testStimulusTimeout);
+        stimulusElement.style.opacity = 0;
+        stimulusIsVisible = false;
+        experimentActive = false;
+        statusIndicator.classList.remove('active');
+        instructionElement.textContent = 'Press space to start!';
+        showResults();
+    }
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === ' ') {
+            if (!experimentActive) {
+                startExperiment();
+                return;
+            }
+            if (stimulusIsVisible) {
+                if (expectingResponse) {
+                    recordStimulusReactionTime();
+                    startTestTrial();
+                } else {
+                    mistakes++;
+                }
+            }
+        } else if (event.key === 'a') {
+            if (experimentActive) {
+                stopExperiment();
+            }
+        }
+    });
+
+    // Initialize result cards with fade-in effect
+    document.addEventListener('DOMContentLoaded', () => {
+        const resultCards = document.querySelectorAll('.result-card');
+        resultCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('fade-in');
+            }, index * 150);
+        });
+    });
+</script>
+</body>
+</html>

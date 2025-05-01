@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Capabilities - Reaction Test </title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #f43f5e;
+            --background: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .test-area {
+            position: relative;
+            height: 400px;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.02);
+            border: 2px dashed var(--border);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        #stimulus {
+            position: absolute;
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 3s ease-in;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-card {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        #mistakes .result-value {
+            color: var(--error);
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+        }
+
+        .key-hint {
+            display: inline-block;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.25rem 0.75rem;
+            margin: 0 0.25rem;
+            font-family: monospace;
+            font-weight: bold;
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .last-time {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin: 1rem 0;
+            height: 3rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            padding-top: 2rem;
+        }
+
+        /* Animation for when a new time is recorded */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        /* Status indicator */
+        .status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--text-light);
+        }
+
+        .status.active {
+            background-color: var(--success);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 id="title">Reaction Time Test</h1>
+    <h2 id="instruction">Press <span class="key-hint">Space</span> to start!</h2>
+
+    <div class="test-area">
+        <div id="stimulus"></div>
+        <div class="status" id="status-indicator"></div>
+    </div>
+
+    <div class="last-time" id="time"></div>
+
+    <div class="results">
+        <div class="result-card">
+            <div class="result-label">Attempts</div>
+            <div class="result-value" id="count">-</div>
+        </div>
+        <div class="result-card">
+            <div class="result-label">Average</div>
+            <div class="result-value" id="mean">-</div>
+        </div>
+        <div class="result-card">
+            <div class="result-label">Standard Deviation</div>
+            <div class="result-value" id="sd">-</div>
+        </div>
+        <div class="result-card" id="mistakes">
+            <div class="result-label">Mistakes</div>
+            <div class="result-value" id="mistakes-value">-</div>
+        </div>
+    </div>
+
+    <div class="result-card">
+        <div class="result-label">Correlation (Distance/Time)</div>
+        <div class="result-value" id="correlation">-</div>
+    </div>
+
+    <div class="controls">
+        Press <span class="key-hint">Space</span> when the stimulus appears | Press <span class="key-hint">A</span> to end test and see results
+    </div>
+</div>
+
+<div class="footer">
+    Human-Computer Interaction - Reaction Test Study - Style-Sheet generated by v0.dev
+</div>
+
+<script>
+    // if true, the experiment is currently active
+    let experimentActive = false;
+
+    // if true, the stimulus is currently visible and the user should press space
+    let stimulusIsVisible = false;
+    let mistakes = 0;
+
+    // time at which the stimulus last appeared (in milliseconds, see Date.now())
+    let stimulusTimestamp;
+
+    // ID of the timeout that is scheduled to make the stimulus appear.
+    // Used to cancel tests when the experiment ends.
+    let testStimulusTimeout;
+
+    // recorded reaction times in milliseconds
+    let times = [];
+    let distances = [];
+
+    // DOM elements
+    const timeElement = document.getElementById('time');
+    const countElement = document.getElementById('count');
+    const meanElement = document.getElementById('mean');
+    const stdDevElement = document.getElementById('sd');
+    const instructionElement = document.getElementById('instruction');
+    const stimulusElement = document.getElementById('stimulus');
+    const mistakesElement = document.getElementById('mistakes-value');
+    const correlationElement = document.getElementById('correlation');
+    const statusIndicator = document.getElementById('status-indicator');
+
+    function calculateDistanceToCenter(x, y) {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        return Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+    }
+
+    // Funktion zur Berechnung der Korrelation zwischen zwei Datensätzen
+    function calculateCorrelation(xArray, yArray) {
+        if (xArray.length !== yArray.length || xArray.length === 0) return 0;
+
+        const n = xArray.length;
+        let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+
+        for (let i = 0; i < n; i++) {
+            sumX += xArray[i];
+            sumY += yArray[i];
+            sumXY += xArray[i] * yArray[i];
+            sumX2 += xArray[i] * xArray[i];
+            sumY2 += yArray[i] * yArray[i];
+        }
+
+        const numerator = n * sumXY - sumX * sumY;
+        const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+
+        return denominator === 0 ? 0 : numerator / denominator;
+    }
+
+    function randomizeStimulusPosition() {
+        const testArea = document.querySelector('.test-area');
+        const rect = testArea.getBoundingClientRect();
+
+        // Keep the stimulus fully within the test area
+        const maxX = rect.width - 80;  // stimulus width
+        const maxY = rect.height - 80; // stimulus height
+
+        stimulusElement.style.left = Math.floor(Math.random() * maxX) + 'px';
+        stimulusElement.style.top = Math.floor(Math.random() * maxY) + 'px';
+    }
+
+    function getMean(data) {
+        let sum = 0;
+        for (let value of data) sum += value;
+        return sum / data.length;
+    }
+
+    function getStandardDeviation(data) {
+        let mean = getMean(data);
+        let squareSum = 0;
+        for (let value of data) squareSum += (value - mean) ** 2;
+        return Math.sqrt(squareSum / data.length);
+    }
+
+    function clearResults() {
+        timeElement.textContent = '';
+        countElement.textContent = '-';
+        meanElement.textContent = '-';
+        stdDevElement.textContent = '-';
+        mistakesElement.textContent = '-';
+        correlationElement.textContent = '-';
+    }
+
+    function showResults() {
+        let meanDeltaTime = getMean(times);
+        let stdDev = getStandardDeviation(times);
+
+        countElement.textContent = times.length;
+        meanElement.textContent = Math.round(meanDeltaTime) + ' ms';
+        stdDevElement.textContent = Math.round(stdDev) + ' ms';
+        mistakesElement.textContent = mistakes;
+
+        // Korrelation berechnen und anzeigen
+        const correlation = calculateCorrelation(distances, times);
+        correlationElement.textContent = correlation.toFixed(3);
+
+        mistakes = 0; // Reset mistakes after showing results
+    }
+
+    function setStimulusColor(newColor) {
+        stimulusElement.style.backgroundColor = newColor;
+    }
+
+    function startTestTrial() {
+        // reset the stimulus
+        stimulusElement.style.transition = 'none'; // Transition deaktivieren
+        stimulusElement.style.opacity = 0; // Direkt auf 0 setzen
+        randomizeStimulusPosition();
+        setStimulusColor(getComputedStyle(document.documentElement).getPropertyValue('--secondary'));
+        stimulusIsVisible = false;
+
+        setTimeout(() => {
+            stimulusElement.style.transition = 'opacity 3s ease-in';
+        }, 50);
+
+        // schedule the stimulus to appear after a random amount of time
+        let timeToWaitInSeconds = Math.random() * 4 + 2; // 2 - 6s
+        testStimulusTimeout = setTimeout(showStimulus, timeToWaitInSeconds * 1000);
+    }
+
+    let currentStimulusX = 0;
+    let currentStimulusY = 0;
+
+    function showStimulus() {
+        stimulusElement.style.opacity = 1;
+        setStimulusColor(getComputedStyle(document.documentElement).getPropertyValue('--secondary'));
+        stimulusIsVisible = true;
+        stimulusTimestamp = Date.now();
+
+        // Position des Stimulus erfassen
+        const rect = stimulusElement.getBoundingClientRect();
+        currentStimulusX = rect.left + rect.width / 2;
+        currentStimulusY = rect.top + rect.height / 2;
+    }
+
+    function recordStimulusReactionTime() {
+        let deltaTime = Date.now() - stimulusTimestamp;
+        times.push(deltaTime);
+
+        // Abstand zur Bildschirmmitte berechnen und speichern
+        const distance = calculateDistanceToCenter(currentStimulusX, currentStimulusY);
+        distances.push(distance);
+
+        // Display with animation
+        timeElement.textContent = deltaTime + ' ms';
+        timeElement.classList.add('pulse');
+        setTimeout(() => {
+            timeElement.classList.remove('pulse');
+        }, 500);
+    }
+
+    function startExperiment() {
+        clearResults(); // clear results of any previous tests
+        instructionElement.innerHTML = "Watch for the <strong>red circle</strong> and press <span class='key-hint'>Space</span> when it appears!";
+        statusIndicator.classList.add('active');
+
+        // reset data and start tests
+        times = [];
+        distances = [];
+        experimentActive = true;
+        startTestTrial();
+    }
+
+    function stopExperiment() {
+        // cancel any ongoing tests
+        clearTimeout(testStimulusTimeout);
+        stimulusIsVisible = false;
+        experimentActive = false;
+        statusIndicator.classList.remove('active');
+
+        // reset instruction and show results
+        instructionElement.innerHTML = 'Press <span class="key-hint">Space</span> to start!';
+        showResults();
+    }
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === ' ') {
+            if (!experimentActive) {
+                startExperiment();
+                return;
+            }
+
+            if (stimulusIsVisible) {
+                recordStimulusReactionTime();
+                startTestTrial();
+            } else {
+                // Fehler erhöhen, wenn der Stimulus nicht sichtbar ist
+                mistakes++;
+                mistakesElement.textContent = mistakes;
+            }
+        } else if (event.key === 'a') {
+            if (experimentActive) {
+                stopExperiment();
+            }
+        }
+    });
+</script>
+</body>
+</html>
