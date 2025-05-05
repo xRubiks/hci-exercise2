@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A1 - Reaction Time Test</title>
+    <title>A2 - Reaction Time Test</title>
     <style>
         :root {
             /* Enhanced color palette */
@@ -425,6 +425,17 @@
             box-shadow: var(--shadow-lg);
         }
 
+        .footer .v0-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        .footer .v0-link:hover {
+            opacity: 0.8;
+        }
+
         .rule-highlight {
             background-color: rgba(109, 40, 217, 0.1);
             padding: 0.5rem 1rem;
@@ -432,6 +443,250 @@
             margin: 1rem 0;
             font-weight: 500;
             text-align: center;
+        }
+
+        /* Download button styles */
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-image: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            margin: 2rem auto 1rem;
+        }
+
+        .download-button:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .download-button:active {
+            transform: translateY(-2px);
+        }
+
+        .download-button svg {
+            margin-right: 0.75rem;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .download-button:disabled {
+            background-image: linear-gradient(135deg, var(--text-light), #94a3b8);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: var(--shadow);
+            opacity: 0.7;
+        }
+
+        /* Demographics modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background-color: var(--card);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            padding: 0;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            background-image: var(--primary-gradient);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text);
+            background-color: var(--background);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .radio-group {
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .radio-option input[type="radio"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .required::after {
+            content: "*";
+            color: var(--error);
+            margin-left: 0.25rem;
+        }
+
+        .form-note {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary {
+            background-color: var(--background);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f1f5f9;
+        }
+
+        .btn-primary {
+            background-image: var(--primary-gradient);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Trial counter display */
+        .trial-counter {
+            position: absolute;
+            top: 1.25rem;
+            left: 1.25rem;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px;
+            background-color: var(--card);
+            box-shadow: var(--shadow-md);
+            font-weight: 600;
+            font-size: 0.875rem;
+            z-index: 10;
         }
 
         @keyframes pulse {
@@ -517,6 +772,11 @@
             .shape-examples {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
         }
     </style>
 </head>
@@ -597,6 +857,7 @@
     <div class="test-area scale-in">
         <svg id="stimulus"></svg>
         <div class="status-indicator" id="status">Test Active</div>
+        <div class="trial-counter" id="trial-counter">Trial: 0/30</div>
     </div>
 
     <div class="results-grid">
@@ -627,24 +888,145 @@
         </div>
     </div>
 
+    <div class="button-container">
+        <button id="show-demographics-button" class="download-button" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Enter Demographic Data
+        </button>
+    </div>
+
     <div class="controls">
         <div class="control-hint">
             <div class="key">Space</div>
             <span>Press for squares only</span>
         </div>
-        <div class="control-hint">
-            <div class="key">A</div>
-            <span>End test and see results</span>
+    </div>
+</div>
+
+<!-- Demographics Modal -->
+<div class="modal-overlay" id="demographics-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2>Demographic Information</h2>
+            <p>Please provide the following information for research purposes</p>
+        </div>
+        <div class="modal-body">
+            <form id="demographics-form">
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="name" class="required">Name</label>
+                            <input type="text" id="name" name="name" required>
+                            <div class="error-message" id="name-error">Please enter your name</div>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="age" class="required">Age</label>
+                            <input type="number" id="age" name="age" min="1" max="120" required>
+                            <div class="error-message" id="age-error">Please enter a valid age (1-120)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Gender</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="gender-male" name="gender" value="male" required>
+                            <label for="gender-male">Male</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="gender-female" name="gender" value="female">
+                            <label for="gender-female">Female</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="gender-diverse" name="gender" value="diverse">
+                            <label for="gender-diverse">Diverse</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="gender-not-specified" name="gender" value="not_specified">
+                            <label for="gender-not-specified">Prefer not to say</label>
+                        </div>
+                    </div>
+                    <div class="error-message" id="gender-error">Please select a gender option</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="vision-left">Vision Impairment (Left Eye, Diopter)</label>
+                            <input type="number" id="vision-left" name="vision_left" step="0.25" placeholder="e.g. -1.5 or +2.0">
+                            <div class="form-note">Leave blank if unknown or not applicable</div>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="vision-right">Vision Impairment (Right Eye, Diopter)</label>
+                            <input type="number" id="vision-right" name="vision_right" step="0.25" placeholder="e.g. -1.5 or +2.0">
+                            <div class="form-note">Leave blank if unknown or not applicable</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Color Vision</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="color-normal" name="color_vision" value="normal" checked>
+                            <label for="color-normal">Normal color vision</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="color-red-green" name="color_vision" value="red_green_deficiency">
+                            <label for="color-red-green">Red-green color deficiency (Deuteranopia/Protanopia)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="color-blue-yellow" name="color_vision" value="blue_yellow_deficiency">
+                            <label for="color-blue-yellow">Blue-yellow color deficiency (Tritanopia)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="color-monochromacy" name="color_vision" value="monochromacy">
+                            <label for="color-monochromacy">Monochromacy (complete color blindness)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="color-unknown" name="color_vision" value="unknown">
+                            <label for="color-unknown">Unknown</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="cancel-button" class="btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Cancel
+            </button>
+            <button type="button" id="submit-demographics-button" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download Results
+            </button>
         </div>
     </div>
 </div>
 
 <div class="footer">
-    <p>Human-Computer Interaction - Reaction Time Test &copy; 2025</p>
+    <p>Human-Computer Interaction - Reaction Test Study - Designed with <a href="https://v0.dev" target="_blank" rel="noopener noreferrer" class="v0-link">v0.dev</a> &copy; 2025</p>
 </div>
 
 <script>
-    // Keeping the original logic intact
+    // Experiment status variables
     let experimentActive = false;
     let stimulusIsVisible = false;
     let expectingResponse = false;
@@ -659,6 +1041,10 @@
     let currentStimulusColor;
     let currentStimulusSize;
 
+    // Trial counter
+    let trialCount = 0;
+    const MAX_TRIALS = 30;
+
     let instructionElement = document.getElementById('instruction');
     let stimulusElement = document.getElementById('stimulus');
     let meanPurpleElement = document.getElementById('meanPurple');
@@ -667,6 +1053,19 @@
     let sdOrangeElement = document.getElementById('sdOrange');
     let errorRateElement = document.getElementById('errorRate');
     let statusIndicator = document.getElementById('status');
+    let showDemographicsButton = document.getElementById('show-demographics-button');
+    let demographicsModal = document.getElementById('demographics-modal');
+    let cancelButton = document.getElementById('cancel-button');
+    let submitDemographicsButton = document.getElementById('submit-demographics-button');
+    let demographicsForm = document.getElementById('demographics-form');
+    let trialCounterElement = document.getElementById('trial-counter');
+
+    // Form validation elements
+    const nameInput = document.getElementById('name');
+    const ageInput = document.getElementById('age');
+    const nameError = document.getElementById('name-error');
+    const ageError = document.getElementById('age-error');
+    const genderError = document.getElementById('gender-error');
 
     function getRndPosition(max) {
         return Math.floor(Math.random() * max);
@@ -713,6 +1112,9 @@
         mistakes = 0;
         triangleCount = 0;
         squareCount = 0;
+        trialCount = 0;
+        updateTrialCounter();
+        showDemographicsButton.disabled = true;
     }
 
     function showResults() {
@@ -736,6 +1138,168 @@
         meanOrangeElement.textContent = Math.round(meanOrange) + ' ms';
         sdOrangeElement.textContent = Math.round(sdOrange) + ' ms';
         errorRateElement.textContent = (errorRate * 100).toFixed(1) + '%';
+
+        // Enable demographics button if we have results
+        showDemographicsButton.disabled = (timesPurple.length === 0 && timesOrange.length === 0);
+    }
+
+    function updateTrialCounter() {
+        trialCounterElement.textContent = `Trial: ${trialCount}/${MAX_TRIALS}`;
+    }
+
+    function getBrowserInfo() {
+        const userAgent = navigator.userAgent;
+        let browserName = "Unknown";
+        let browserVersion = "Unknown";
+        let osName = "Unknown";
+
+        // Detect browser
+        if (userAgent.indexOf("Firefox") > -1) {
+            browserName = "Mozilla Firefox";
+            browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("SamsungBrowser") > -1) {
+            browserName = "Samsung Internet";
+            browserVersion = userAgent.match(/SamsungBrowser\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+            browserName = "Opera";
+            browserVersion = userAgent.indexOf("Opera") > -1 ?
+                userAgent.match(/Opera\/([0-9.]+)/)[1] :
+                userAgent.match(/OPR\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Edg") > -1) {
+            browserName = "Microsoft Edge";
+            browserVersion = userAgent.match(/Edg\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Chrome") > -1) {
+            browserName = "Google Chrome";
+            browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Safari") > -1) {
+            browserName = "Apple Safari";
+            browserVersion = userAgent.match(/Version\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident") > -1) {
+            browserName = "Internet Explorer";
+            browserVersion = userAgent.indexOf("MSIE") > -1 ?
+                userAgent.match(/MSIE ([0-9.]+)/)[1] :
+                userAgent.match(/rv:([0-9.]+)/)[1];
+        }
+
+        // Detect OS
+        if (userAgent.indexOf("Windows") > -1) {
+            osName = "Windows";
+        } else if (userAgent.indexOf("Mac") > -1) {
+            osName = "MacOS";
+        } else if (userAgent.indexOf("Linux") > -1) {
+            osName = "Linux";
+        } else if (userAgent.indexOf("Android") > -1) {
+            osName = "Android";
+        } else if (userAgent.indexOf("iOS") > -1 || userAgent.indexOf("iPhone") > -1 || userAgent.indexOf("iPad") > -1) {
+            osName = "iOS";
+        }
+
+        return {
+            browser: browserName,
+            version: browserVersion,
+            os: osName,
+            userAgent: userAgent,
+            language: navigator.language,
+            screenWidth: window.screen.width,
+            screenHeight: window.screen.height,
+            devicePixelRatio: window.devicePixelRatio || 1
+        };
+    }
+
+    function validateDemographicsForm() {
+        let isValid = true;
+
+        // Validate name
+        if (!nameInput.value.trim()) {
+            nameError.classList.add('visible');
+            isValid = false;
+        } else {
+            nameError.classList.remove('visible');
+        }
+
+        // Validate age
+        if (!ageInput.value || ageInput.value < 1 || ageInput.value > 120) {
+            ageError.classList.add('visible');
+            isValid = false;
+        } else {
+            ageError.classList.remove('visible');
+        }
+
+        // Validate gender
+        let genderSelected = false;
+        document.querySelectorAll('input[name="gender"]').forEach(input => {
+            if (input.checked) {
+                genderSelected = true;
+            }
+        });
+
+        if (!genderSelected) {
+            genderError.classList.add('visible');
+            isValid = false;
+        } else {
+            genderError.classList.remove('visible');
+        }
+
+        return isValid;
+    }
+
+    function saveResults() {
+        // Get demographic data from form
+        const demographicData = {
+            name: nameInput.value.trim(),
+            age: parseInt(ageInput.value),
+            gender: document.querySelector('input[name="gender"]:checked').value,
+            vision: {
+                left: document.getElementById('vision-left').value ? parseFloat(document.getElementById('vision-left').value) : null,
+                right: document.getElementById('vision-right').value ? parseFloat(document.getElementById('vision-right').value) : null
+            },
+            colorVision: document.querySelector('input[name="color_vision"]:checked').value,
+            browserInfo: getBrowserInfo()
+        };
+
+        // Create detailed results object with all raw data
+        const results = {
+            participant: demographicData,
+            summary: {
+                purpleSquares: {
+                    count: timesPurple.length,
+                    mean: getMean(timesPurple),
+                    standardDeviation: getStandardDeviation(timesPurple)
+                },
+                orangeSquares: {
+                    count: timesOrange.length,
+                    mean: getMean(timesOrange),
+                    standardDeviation: getStandardDeviation(timesOrange)
+                },
+                errorRate: triangleCount > 0 ? (mistakes / (triangleCount + squareCount)) * 100 : 0,
+                totalSquares: squareCount,
+                totalTriangles: triangleCount,
+                mistakes: mistakes
+            },
+            rawData: {
+                purpleReactionTimes: timesPurple,
+                orangeReactionTimes: timesOrange,
+                timestamp: new Date().toISOString()
+            }
+        };
+
+        // Convert to formatted JSON
+        const json = JSON.stringify(results, null, 2);
+
+        // Create temporary download URL
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        // Create and trigger download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'binary_stimulus_results_' + demographicData.name.replace(/\s+/g, '_').toLowerCase() + '_' + new Date().toISOString().slice(0,19).replace(/:/g,'-') + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Free memory
+        URL.revokeObjectURL(url);
     }
 
     function startTestTrial() {
@@ -794,6 +1358,16 @@
         if (currentStimulusType === 'triangle') {
             setTimeout(() => {
                 if (experimentActive) {
+                    // Increment trial count for triangles too
+                    trialCount++;
+                    updateTrialCounter();
+
+                    // Check if we've reached the maximum number of trials
+                    if (trialCount >= MAX_TRIALS) {
+                        stopExperiment();
+                        return;
+                    }
+
                     startTestTrial();
                 }
             }, (Math.random() * 3 + 1) * 1000); // 1 - 4s
@@ -806,6 +1380,16 @@
             timesPurple.push(deltaTime);
         } else {
             timesOrange.push(deltaTime);
+        }
+
+        // Increment trial count
+        trialCount++;
+        updateTrialCounter();
+
+        // Check if we've reached the maximum number of trials
+        if (trialCount >= MAX_TRIALS) {
+            stopExperiment();
+            return;
         }
     }
 
@@ -827,7 +1411,19 @@
         showResults();
     }
 
+    function showDemographicsForm() {
+        demographicsModal.classList.add('active');
+    }
+
+    function hideDemographicsForm() {
+        demographicsModal.classList.remove('active');
+    }
+
+    // Event listeners
     window.addEventListener('keydown', (event) => {
+        if (event.key === ' ' || event.code === 'Space') {
+            event.preventDefault();
+        }
         if (event.key === ' ') {
             if (!experimentActive) {
                 startExperiment();
@@ -841,10 +1437,6 @@
                     mistakes++;
                 }
             }
-        } else if (event.key === 'a') {
-            if (experimentActive) {
-                stopExperiment();
-            }
         }
     });
 
@@ -856,6 +1448,19 @@
                 card.classList.add('fade-in');
             }, index * 150);
         });
+
+        // Initialize trial counter
+        updateTrialCounter();
+    });
+
+    // Demographics modal event listeners
+    showDemographicsButton.addEventListener('click', showDemographicsForm);
+    cancelButton.addEventListener('click', hideDemographicsForm);
+    submitDemographicsButton.addEventListener('click', function() {
+        if (validateDemographicsForm()) {
+            saveResults();
+            hideDemographicsForm();
+        }
     });
 </script>
 </body>

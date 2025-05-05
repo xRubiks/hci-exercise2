@@ -2,9 +2,1365 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A3 - Reaction Time Test</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --primary-gradient: linear-gradient(135deg, #2563eb, #3b82f6);
+            --german: #10b981;
+            --chinese: #f59e0b;
+            --mexican: #ef4444;
+            --background: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image:
+                    radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.05) 0%, transparent 300px),
+                    radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.05) 0%, transparent 300px);
+        }
+
+        .header {
+            background-image: var(--primary-gradient);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            z-index: 10;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            padding-bottom: 4rem;
+        }
+
+        .header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.025em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: -2rem auto 0;
+            padding: 0 2rem 2rem;
+            width: 100%;
+            flex: 1;
+            position: relative;
+            z-index: 20;
+        }
+
+        .instruction-panel {
+            background-color: var(--card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border-left: 6px solid var(--primary);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .instruction-panel::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background-image: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .instruction-panel h2 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .key-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .key-control {
+            display: flex;
+            align-items: center;
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .key-control:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .key-control .key {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            margin-right: 1rem;
+            font-family: monospace;
+            font-weight: bold;
+            min-width: 2.5rem;
+            height: 2.5rem;
+            box-shadow: var(--shadow);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .key-control.german .key {
+            background-color: var(--german);
+        }
+
+        .key-control.chinese .key {
+            background-color: var(--chinese);
+        }
+
+        .key-control.mexican .key {
+            background-color: var(--mexican);
+        }
+
+        .key-control.space .key {
+            background-color: var(--primary);
+            min-width: 5rem;
+        }
+
+        .key-control.stop .key {
+            background-color: var(--text-light);
+        }
+
+        .stimulus-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            background-color: var(--card);
+            transition: transform 0.3s ease;
+        }
+
+        .stimulus-container:hover {
+            transform: translateY(-5px);
+        }
+
+        #stimulus {
+            width: 100%;
+            height: 400px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-container {
+            text-align: center;
+            margin: 1.5rem 0;
+            min-height: 2.5rem;
+        }
+
+        #feedback {
+            display: inline-block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 0.5rem 2rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        #feedback.visible {
+            opacity: 1;
+        }
+
+        #feedback.correct {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        #feedback.incorrect {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background-color: var(--card);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.02) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .result-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .result-card.german h3 {
+            color: var(--german);
+        }
+
+        .result-card.chinese h3 {
+            color: var(--chinese);
+        }
+
+        .result-card.mexican h3 {
+            color: var(--mexican);
+        }
+
+        .result-card h3::before {
+            content: "";
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+        }
+
+        .result-card.german h3::before {
+            background-color: var(--german);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .result-card.chinese h3::before {
+            background-color: var(--chinese);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        }
+
+        .result-card.mexican h3::before {
+            background-color: var(--mexican);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+
+        .result-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-label {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .footer {
+            background-color: var(--card);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-top: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .footer .v0-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        .footer .v0-link:hover {
+            opacity: 0.8;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border);
+            border-radius: 3px;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-image: var(--primary-gradient);
+            width: 10%;
+            transition: width 0.3s ease;
+        }
+
+        /* Download button styles */
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-image: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            margin: 2rem auto 1rem;
+        }
+
+        .download-button:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .download-button:active {
+            transform: translateY(-2px);
+        }
+
+        .download-button svg {
+            margin-right: 0.75rem;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .download-button:disabled {
+            background-image: linear-gradient(135deg, var(--text-light), #94a3b8);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: var(--shadow);
+            opacity: 0.7;
+        }
+
+        /* Demographics form styles */
+        .demographics-container {
+            display: none;
+            background-color: var(--card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            position: relative;
+            z-index: 30;
+            border-left: 6px solid var(--primary);
+        }
+
+        .demographics-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .main-container.hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text);
+            background-color: var(--background);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-check input[type="radio"],
+        .form-check input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary {
+            background-color: var(--background);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f1f5f9;
+        }
+
+        .btn-primary {
+            background-image: var(--primary-gradient);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .required-field::after {
+            content: "*";
+            color: var(--error);
+            margin-left: 4px;
+        }
+
+        .form-note {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        /* Trial counter display */
+        .trial-counter {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--card);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            color: var(--text);
+            z-index: 10;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.5s ease forwards;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 1rem 3.5rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 1rem 1.5rem;
+                margin-top: -1.5rem;
+            }
+
+            .key-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #stimulus {
+                height: 300px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
 </head>
 <body>
+<div class="header">
+    <h1>Reaction Time Test</h1>
+    <p>Test your ability to recognize different cuisines</p>
+</div>
 
+<div class="container main-container" id="main-container">
+    <div class="instruction-panel scale-in">
+        <h2 id="instruction">Press space to start!</h2>
+
+        <div class="key-controls">
+            <div class="key-control german">
+                <div class="key">D</div>
+                <span>German Food</span>
+            </div>
+            <div class="key-control chinese">
+                <div class="key">F</div>
+                <span>Chinese Food</span>
+            </div>
+            <div class="key-control mexican">
+                <div class="key">G</div>
+                <span>Mexican Food</span>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+    </div>
+
+    <div class="stimulus-container scale-in">
+        <div id="stimulus"></div>
+        <div class="trial-counter" id="trial-counter">Trial: 0/30</div>
+    </div>
+
+    <div class="feedback-container">
+        <div id="feedback"></div>
+    </div>
+
+    <div class="button-container">
+        <button id="show-demographics-button" class="download-button" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Enter Demographic Data
+        </button>
+    </div>
+
+    <div class="results-grid">
+        <div class="result-card german fade-in">
+            <h3>German Food</h3>
+            <div class="result-stat">
+                <div class="result-label">Reaction Time:</div>
+                <div class="result-value" id="meanGerman">-</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-label">Standard Deviation:</div>
+                <div class="result-value" id="sdGerman">-</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-label">Error Rate:</div>
+                <div class="result-value" id="errorGerman">-</div>
+            </div>
+        </div>
+
+        <div class="result-card chinese fade-in">
+            <h3>Chinese Food</h3>
+            <div class="result-stat">
+                <div class="result-label">Reaction Time:</div>
+                <div class="result-value" id="meanChinese">-</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-label">Standard Deviation:</div>
+                <div class="result-value" id="sdChinese">-</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-label">Error Rate:</div>
+                <div class="result-value" id="errorChinese">-</div>
+            </div>
+        </div>
+
+        <div class="result-card mexican fade-in">
+            <h3>Mexican Food</h3>
+            <div class="result-stat">
+                <div class="result-label">Reaction Time:</div>
+                <div class="result-value" id="meanMexican">-</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-label">Standard Deviation:</div>
+                <div class="result-value" id="sdMexican">-</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-label">Error Rate:</div>
+                <div class="result-value" id="errorMexican">-</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Demographics Form -->
+<div class="demographics-container" id="demographics-container">
+    <h2>Demographic Information</h2>
+    <p class="form-note">Please provide the following information for research purposes</p>
+
+    <form id="demographics-form">
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="name" class="required-field">Name</label>
+                    <input type="text" id="name" name="name" required>
+                    <div class="error-message" id="name-error">Please enter your name</div>
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="age" class="required-field">Age</label>
+                    <input type="number" id="age" name="age" min="1" max="120" required>
+                    <div class="error-message" id="age-error">Please enter a valid age (1-120)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="required-field">Gender</label>
+            <div class="form-check">
+                <input type="radio" id="gender-male" name="gender" value="male" required>
+                <label for="gender-male">Male</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="gender-female" name="gender" value="female">
+                <label for="gender-female">Female</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="gender-diverse" name="gender" value="diverse">
+                <label for="gender-diverse">Non-binary/Diverse</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="gender-not-specified" name="gender" value="not_specified">
+                <label for="gender-not-specified">Prefer not to say</label>
+            </div>
+            <div class="error-message" id="gender-error">Please select a gender option</div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="vision-left">Visual Impairment (Left Eye)</label>
+                    <input type="number" id="vision-left" name="vision_left" step="0.25" placeholder="e.g. -1.5 or +2.0">
+                    <div class="form-note">Leave blank if unknown or not applicable</div>
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="vision-right">Visual Impairment (Right Eye)</label>
+                    <input type="number" id="vision-right" name="vision_right" step="0.25" placeholder="e.g. -1.5 or +2.0">
+                    <div class="form-note">Leave blank if unknown or not applicable</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Color Vision</label>
+            <div class="form-check">
+                <input type="radio" id="color-normal" name="color_vision" value="normal" checked>
+                <label for="color-normal">Normal Color Vision</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="color-red-green" name="color_vision" value="red_green_deficiency">
+                <label for="color-red-green">Red-Green Deficiency (Deuteranopia/Protanopia)</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="color-blue-yellow" name="color_vision" value="blue_yellow_deficiency">
+                <label for="color-blue-yellow">Blue-Yellow Deficiency (Tritanopia)</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="color-monochromacy" name="color_vision" value="monochromacy">
+                <label for="color-monochromacy">Monochromacy (Complete Color Blindness)</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="color-unknown" name="color_vision" value="unknown">
+                <label for="color-unknown">Unknown</label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" id="back-button" class="btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Results
+            </button>
+            <button type="button" id="download-data-button" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download Results
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="footer">
+    <p>Human-Computer Interaction - Reaction Test Study - Designed with <a href="https://v0.dev" target="_blank" rel="noopener noreferrer" class="v0-link">v0.dev</a> &copy; 2025</p>
+</div>
+
+<script>
+    // Prevent scrolling when spacebar is pressed
+    window.addEventListener('keydown', function(e) {
+        if(e.key === ' ' || e.code === 'Space' || e.keyCode === 32) {
+            e.preventDefault();
+            return false;
+        }
+    }, { passive: false });
+
+    // Experiment status variables
+    let experimentActive = false;
+    let stimulusIsVisible = false;
+    let stimulusTimestamp;
+    let testStimulusTimeout;
+    let currentImageIndex = 0;
+    let shuffledImages = [];
+    let currentFoodType;
+
+    // Trial counter
+    let trialCount = 0;
+    const MAX_TRIALS = 30;
+
+    // Result tracking
+    let timesGerman = [];
+    let timesChinese = [];
+    let timesMexican = [];
+    let errorsGerman = 0;
+    let errorsChinese = 0;
+    let errorsMexican = 0;
+    let totalGerman = 0;
+    let totalChinese = 0;
+    let totalMexican = 0;
+
+    // DOM Elements
+    let instructionElement = document.getElementById('instruction');
+    let stimulusElement = document.getElementById('stimulus');
+    let feedbackElement = document.getElementById('feedback');
+    let progressElement = document.getElementById('progress');
+    let meanGermanElement = document.getElementById('meanGerman');
+    let sdGermanElement = document.getElementById('sdGerman');
+    let errorGermanElement = document.getElementById('errorGerman');
+    let meanChineseElement = document.getElementById('meanChinese');
+    let sdChineseElement = document.getElementById('sdChinese');
+    let errorChineseElement = document.getElementById('errorChinese');
+    let meanMexicanElement = document.getElementById('meanMexican');
+    let sdMexicanElement = document.getElementById('sdMexican');
+    let errorMexicanElement = document.getElementById('errorMexican');
+    let showDemographicsButton = document.getElementById('show-demographics-button');
+    let demographicsContainer = document.getElementById('demographics-container');
+    let mainContainer = document.getElementById('main-container');
+    let backButton = document.getElementById('back-button');
+    let downloadDataButton = document.getElementById('download-data-button');
+    let demographicsForm = document.getElementById('demographics-form');
+    let trialCounterElement = document.getElementById('trial-counter');
+
+    // Demographics form elements
+    const nameInput = document.getElementById('name');
+    const ageInput = document.getElementById('age');
+    const genderInputs = document.querySelectorAll('input[name="gender"]');
+    const nameError = document.getElementById('name-error');
+    const ageError = document.getElementById('age-error');
+    const genderError = document.getElementById('gender-error');
+
+    // Image database
+    // Replace these URLs with actual images speisen/ch/ch1.jpg
+    const foodImages = {
+        german: Array.from({length: 10}, (_, i) => ({ url: `speisen/de/de${i+1}.jpg` })),
+        chinese: Array.from({length: 10}, (_, i) => ({ url: `speisen/ch/ch${i+1}.jpg` })),
+        mexican: Array.from({length: 10}, (_, i) => ({ url: `speisen/me/m${i+1}.jpg` }))
+    };
+
+    function getMean(data) {
+        if (data.length === 0) return 0;
+        let sum = 0;
+        for (let value of data) sum += value;
+        return sum / data.length;
+    }
+
+    function getStandardDeviation(data) {
+        if (data.length === 0) return 0;
+        let mean = getMean(data);
+        let squareSum = 0;
+        for (let value of data) squareSum += (value - mean) ** 2;
+        return Math.sqrt(squareSum / data.length);
+    }
+
+    function clearResults() {
+        timesGerman = [];
+        timesChinese = [];
+        timesMexican = [];
+        errorsGerman = 0;
+        errorsChinese = 0;
+        errorsMexican = 0;
+        totalGerman = 0;
+        totalChinese = 0;
+        totalMexican = 0;
+        trialCount = 0;
+
+        meanGermanElement.textContent = '-';
+        sdGermanElement.textContent = '-';
+        errorGermanElement.textContent = '-';
+        meanChineseElement.textContent = '-';
+        sdChineseElement.textContent = '-';
+        errorChineseElement.textContent = '-';
+        meanMexicanElement.textContent = '-';
+        sdMexicanElement.textContent = '-';
+        errorMexicanElement.textContent = '-';
+
+        feedbackElement.textContent = '';
+        feedbackElement.className = '';
+        progressElement.style.width = '0%';
+        updateTrialCounter();
+
+        // Disable download button
+        showDemographicsButton.disabled = true;
+    }
+
+    function updateTrialCounter() {
+        trialCounterElement.textContent = `Trial: ${trialCount}/${MAX_TRIALS}`;
+    }
+
+    function showResults() {
+        // German Food
+        let meanGerman = getMean(timesGerman);
+        let sdGerman = getStandardDeviation(timesGerman);
+        let errorRateGerman = totalGerman > 0 ? (errorsGerman / totalGerman) * 100 : 0;
+
+        // Chinese Food
+        let meanChinese = getMean(timesChinese);
+        let sdChinese = getStandardDeviation(timesChinese);
+        let errorRateChinese = totalChinese > 0 ? (errorsChinese / totalChinese) * 100 : 0;
+
+        // Mexican Food
+        let meanMexican = getMean(timesMexican);
+        let sdMexican = getStandardDeviation(timesMexican);
+        let errorRateMexican = totalMexican > 0 ? (errorsMexican / totalMexican) * 100 : 0;
+
+        // Display results with animation
+        const resultCards = document.querySelectorAll('.result-card');
+        resultCards.forEach((card, index) => {
+            card.style.opacity = 0;
+            setTimeout(() => {
+                card.classList.add('fade-in');
+            }, index * 150);
+        });
+
+        // Display results
+        meanGermanElement.textContent = Math.round(meanGerman) + ' ms';
+        sdGermanElement.textContent = Math.round(sdGerman) + ' ms';
+        errorGermanElement.textContent = errorRateGerman.toFixed(1) + '%';
+
+        meanChineseElement.textContent = Math.round(meanChinese) + ' ms';
+        sdChineseElement.textContent = Math.round(sdChinese) + ' ms';
+        errorChineseElement.textContent = errorRateChinese.toFixed(1) + '%';
+
+        meanMexicanElement.textContent = Math.round(meanMexican) + ' ms';
+        sdMexicanElement.textContent = Math.round(sdMexican) + ' ms';
+        errorMexicanElement.textContent = errorRateMexican.toFixed(1) + '%';
+
+        // Enable demographics button if we have results
+        showDemographicsButton.disabled = (timesGerman.length === 0 && timesChinese.length === 0 && timesMexican.length === 0);
+    }
+
+    function getBrowserInfo() {
+        const userAgent = navigator.userAgent;
+        let browserName = "Unknown";
+        let browserVersion = "Unknown";
+        let osName = "Unknown";
+
+        // Detect browser
+        if (userAgent.indexOf("Firefox") > -1) {
+            browserName = "Mozilla Firefox";
+            browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("SamsungBrowser") > -1) {
+            browserName = "Samsung Internet";
+            browserVersion = userAgent.match(/SamsungBrowser\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+            browserName = "Opera";
+            browserVersion = userAgent.indexOf("Opera") > -1 ?
+                userAgent.match(/Opera\/([0-9.]+)/)[1] :
+                userAgent.match(/OPR\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Edg") > -1) {
+            browserName = "Microsoft Edge";
+            browserVersion = userAgent.match(/Edg\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Chrome") > -1) {
+            browserName = "Google Chrome";
+            browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Safari") > -1) {
+            browserName = "Apple Safari";
+            browserVersion = userAgent.match(/Version\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident") > -1) {
+            browserName = "Internet Explorer";
+            browserVersion = userAgent.indexOf("MSIE") > -1 ?
+                userAgent.match(/MSIE ([0-9.]+)/)[1] :
+                userAgent.match(/rv:([0-9.]+)/)[1];
+        }
+
+        // Detect OS
+        if (userAgent.indexOf("Windows") > -1) {
+            osName = "Windows";
+        } else if (userAgent.indexOf("Mac") > -1) {
+            osName = "MacOS";
+        } else if (userAgent.indexOf("Linux") > -1) {
+            osName = "Linux";
+        } else if (userAgent.indexOf("Android") > -1) {
+            osName = "Android";
+        } else if (userAgent.indexOf("iOS") > -1 || userAgent.indexOf("iPhone") > -1 || userAgent.indexOf("iPad") > -1) {
+            osName = "iOS";
+        }
+
+        return {
+            browser: browserName,
+            version: browserVersion,
+            os: osName,
+            userAgent: userAgent,
+            language: navigator.language,
+            screenWidth: window.screen.width,
+            screenHeight: window.screen.height,
+            devicePixelRatio: window.devicePixelRatio || 1
+        };
+    }
+
+    function validateDemographicsForm() {
+        let isValid = true;
+
+        // Validate name
+        if (!nameInput.value.trim()) {
+            nameError.classList.add('visible');
+            isValid = false;
+        } else {
+            nameError.classList.remove('visible');
+        }
+
+        // Validate age
+        if (!ageInput.value || ageInput.value < 1 || ageInput.value > 120) {
+            ageError.classList.add('visible');
+            isValid = false;
+        } else {
+            ageError.classList.remove('visible');
+        }
+
+        // Validate gender
+        let genderSelected = false;
+        genderInputs.forEach(input => {
+            if (input.checked) {
+                genderSelected = true;
+            }
+        });
+
+        if (!genderSelected) {
+            genderError.classList.add('visible');
+            isValid = false;
+        } else {
+            genderError.classList.remove('visible');
+        }
+
+        return isValid;
+    }
+
+    function saveResults() {
+        // Get demographic data from form
+        const demographicData = {
+            name: nameInput.value.trim(),
+            age: parseInt(ageInput.value),
+            gender: document.querySelector('input[name="gender"]:checked').value,
+            vision: {
+                left: document.getElementById('vision-left').value ? parseFloat(document.getElementById('vision-left').value) : null,
+                right: document.getElementById('vision-right').value ? parseFloat(document.getElementById('vision-right').value) : null
+            },
+            colorVision: document.querySelector('input[name="color_vision"]:checked').value,
+            browserInfo: getBrowserInfo()
+        };
+
+        // Create detailed results object with all raw data
+        const results = {
+            participant: demographicData,
+            summary: {
+                germanFood: {
+                    count: timesGerman.length,
+                    totalShown: totalGerman,
+                    mean: getMean(timesGerman),
+                    standardDeviation: getStandardDeviation(timesGerman),
+                    errorRate: totalGerman > 0 ? (errorsGerman / totalGerman) * 100 : 0
+                },
+                chineseFood: {
+                    count: timesChinese.length,
+                    totalShown: totalChinese,
+                    mean: getMean(timesChinese),
+                    standardDeviation: getStandardDeviation(timesChinese),
+                    errorRate: totalChinese > 0 ? (errorsChinese / totalChinese) * 100 : 0
+                },
+                mexicanFood: {
+                    count: timesMexican.length,
+                    totalShown: totalMexican,
+                    mean: getMean(timesMexican),
+                    standardDeviation: getStandardDeviation(timesMexican),
+                    errorRate: totalMexican > 0 ? (errorsMexican / totalMexican) * 100 : 0
+                }
+            },
+            rawData: {
+                germanReactionTimes: timesGerman,
+                chineseReactionTimes: timesChinese,
+                mexicanReactionTimes: timesMexican,
+                errors: {
+                    german: errorsGerman,
+                    chinese: errorsChinese,
+                    mexican: errorsMexican
+                },
+                timestamp: new Date().toISOString()
+            }
+        };
+
+        // Convert to formatted JSON
+        const json = JSON.stringify(results, null, 2);
+
+        // Create temporary download URL
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        // Create and trigger download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'food_recognition_' + demographicData.name.replace(/\s+/g, '_').toLowerCase() + '_' + new Date().toISOString().slice(0,19).replace(/:/g,'-') + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Free memory
+        URL.revokeObjectURL(url);
+    }
+
+    function shuffleImages() {
+        let allImages = [];
+
+        // Collect all images and mark with type
+        for (let i = 0; i < foodImages.german.length; i++) {
+            allImages.push({ type: 'german', url: foodImages.german[i].url });
+        }
+        for (let i = 0; i < foodImages.chinese.length; i++) {
+            allImages.push({ type: 'chinese', url: foodImages.chinese[i].url });
+        }
+        for (let i = 0; i < foodImages.mexican.length; i++) {
+            allImages.push({ type: 'mexican', url: foodImages.mexican[i].url });
+        }
+
+        // Fisher-Yates Shuffle
+        for (let i = allImages.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [allImages[i], allImages[j]] = [allImages[j], allImages[i]];
+        }
+
+        return allImages;
+    }
+
+    function updateProgressBar() {
+        const totalImages = MAX_TRIALS;
+        const progress = (trialCount / totalImages) * 100;
+        progressElement.style.width = `${progress}%`;
+    }
+
+    function showNextStimulus() {
+        if (trialCount >= MAX_TRIALS) {
+            stopExperiment();
+            return;
+        }
+
+        if (currentImageIndex >= shuffledImages.length) {
+            // If we've gone through all images but haven't reached MAX_TRIALS,
+            // reshuffle and start again
+            shuffledImages = shuffleImages();
+            currentImageIndex = 0;
+        }
+
+        const image = shuffledImages[currentImageIndex];
+        currentFoodType = image.type;
+
+        // Count images per category
+        if (currentFoodType === 'german') totalGerman++;
+        else if (currentFoodType === 'chinese') totalChinese++;
+        else if (currentFoodType === 'mexican') totalMexican++;
+
+        // Display image with animation
+        stimulusElement.style.opacity = 0;
+        setTimeout(() => {
+            stimulusElement.style.backgroundImage = `url(${image.url})`;
+            stimulusElement.style.opacity = 1;
+        }, 300);
+
+        stimulusIsVisible = true;
+        stimulusTimestamp = Date.now();
+
+        // Update progress bar
+        updateProgressBar();
+
+        currentImageIndex++;
+    }
+
+    function recordResponse(responseType) {
+        if (!stimulusIsVisible) return;
+
+        const reactionTime = Date.now() - stimulusTimestamp;
+        let isCorrect = false;
+
+        // Check if response is correct
+        if (responseType === 'german' && currentFoodType === 'german') {
+            timesGerman.push(reactionTime);
+            isCorrect = true;
+        } else if (responseType === 'chinese' && currentFoodType === 'chinese') {
+            timesChinese.push(reactionTime);
+            isCorrect = true;
+        } else if (responseType === 'mexican' && currentFoodType === 'mexican') {
+            timesMexican.push(reactionTime);
+            isCorrect = true;
+        } else {
+            // Count errors
+            if (currentFoodType === 'german') errorsGerman++;
+            else if (currentFoodType === 'chinese') errorsChinese++;
+            else if (currentFoodType === 'mexican') errorsMexican++;
+        }
+
+        // Display feedback with animation
+        feedbackElement.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
+        feedbackElement.className = isCorrect ? 'visible correct' : 'visible incorrect';
+
+        // Prepare for next stimulus
+        stimulusIsVisible = false;
+
+        // Increment trial count
+        trialCount++;
+        updateTrialCounter();
+        updateProgressBar();
+
+        // Short pause before next image
+        setTimeout(() => {
+            feedbackElement.className = '';
+            if (trialCount >= MAX_TRIALS) {
+                stopExperiment();
+            } else {
+                showNextStimulus();
+            }
+        }, 1000);
+    }
+
+    function startExperiment() {
+        clearResults();
+        shuffledImages = shuffleImages();
+        currentImageIndex = 0;
+
+        instructionElement.textContent = "Identify the cuisine of the displayed food";
+        experimentActive = true;
+
+        // First stimulus after short delay
+        setTimeout(showNextStimulus, 1500);
+    }
+
+    function stopExperiment() {
+        stimulusIsVisible = false;
+        experimentActive = false;
+        stimulusElement.style.backgroundImage = 'none';
+
+        progressElement.style.width = '100%';
+        instructionElement.textContent = 'Press space to start!';
+        showResults();
+    }
+
+    function showDemographicsForm() {
+        mainContainer.classList.add('hidden');
+        demographicsContainer.classList.add('active');
+    }
+
+    function hideDemographicsForm() {
+        demographicsContainer.classList.remove('active');
+        mainContainer.classList.remove('hidden');
+    }
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === ' ') {
+            // Space key starts the experiment
+            if (!experimentActive) {
+                startExperiment();
+                return;
+            }
+        } else if (experimentActive && stimulusIsVisible) {
+            if (event.key === 'd' || event.key === 'D') {
+                recordResponse('german');
+            } else if (event.key === 'f' || event.key === 'F') {
+                recordResponse('chinese');
+            } else if (event.key === 'g' || event.key === 'G') {
+                recordResponse('mexican');
+            }
+        }
+    });
+
+    // Initialize result cards with fade-in effect
+    document.addEventListener('DOMContentLoaded', () => {
+        const resultCards = document.querySelectorAll('.result-card');
+        resultCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('fade-in');
+            }, index * 150);
+        });
+
+        // Initialize trial counter
+        updateTrialCounter();
+    });
+
+    // Add event listener for demographics button
+    showDemographicsButton.addEventListener('click', showDemographicsForm);
+
+    // Add event listener for back button
+    backButton.addEventListener('click', hideDemographicsForm);
+
+    // Add event listener for download button
+    downloadDataButton.addEventListener('click', function() {
+        if (validateDemographicsForm()) {
+            saveResults();
+            hideDemographicsForm();
+        }
+    });
+</script>
 </body>
 </html>

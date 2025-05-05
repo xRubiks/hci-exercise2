@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Human Capabilities - Reaction Test </title>
+    <title>A1 - Reaction Time Test</title>
     <style>
         :root {
             --primary: #4f46e5;
@@ -61,6 +61,13 @@
             font-weight: 500;
         }
 
+        h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
         .test-area {
             position: relative;
             height: 400px;
@@ -75,7 +82,6 @@
             position: absolute;
             height: 80px;
             width: 80px;
-            border-radius: 50%;
             opacity: 0;
             transition: opacity 3s ease-in;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -158,6 +164,17 @@
             padding-top: 2rem;
         }
 
+        .footer .v0-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        .footer .v0-link:hover {
+            opacity: 0.8;
+        }
+
         /* Animation for when a new time is recorded */
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -184,16 +201,222 @@
             background-color: var(--success);
             box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
         }
+
+        /* Download button styles */
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 1.5rem auto;
+        }
+
+        .download-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .download-button:active {
+            transform: translateY(0);
+        }
+
+        .download-button svg {
+            margin-right: 0.5rem;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .download-button:disabled {
+            background-color: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Demographics form styles */
+        .demographics-container {
+            display: none;
+            background-color: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .demographics-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            color: var(--text);
+            background-color: var(--background);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-check input[type="radio"],
+        .form-check input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary {
+            background-color: var(--background);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f1f5f9;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .required-field::after {
+            content: "*";
+            color: var(--error);
+            margin-left: 4px;
+        }
+
+        .form-note {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        /* Hide main container when demographics form is active */
+        .main-container.hidden {
+            display: none;
+        }
+
+        /* Trial counter display */
+        .trial-counter {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background-color: var(--card);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            color: var(--text);
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
-<div class="container">
+<div class="container main-container" id="main-container">
     <h1 id="title">Reaction Time Test</h1>
     <h2 id="instruction">Press <span class="key-hint">Space</span> to start!</h2>
 
     <div class="test-area">
         <div id="stimulus"></div>
         <div class="status" id="status-indicator"></div>
+        <div class="trial-counter" id="trial-counter">Trial: 0/30</div>
     </div>
 
     <div class="last-time" id="time"></div>
@@ -222,13 +445,130 @@
         <div class="result-value" id="correlation">-</div>
     </div>
 
+    <div class="button-container">
+        <button id="show-demographics-button" class="download-button" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Enter Demographic Data
+        </button>
+    </div>
+
     <div class="controls">
-        Press <span class="key-hint">Space</span> when the stimulus appears | Press <span class="key-hint">A</span> to end test and see results
+        Press <span class="key-hint">Space</span> when the stimulus appears
     </div>
 </div>
 
+<!-- Demographics Form -->
+<div class="demographics-container" id="demographics-container">
+    <h1>Demographic Information</h1>
+    <h2>Please provide the following information for research purposes</h2>
+
+    <form id="demographics-form">
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="name" class="required-field">Name</label>
+                    <input type="text" id="name" name="name" required>
+                    <div class="error-message" id="name-error">Please enter your name</div>
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="age" class="required-field">Age</label>
+                    <input type="number" id="age" name="age" min="1" max="120" required>
+                    <div class="error-message" id="age-error">Please enter a valid age (1-120)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="required-field">Gender</label>
+            <div class="form-check">
+                <input type="radio" id="gender-male" name="gender" value="male" required>
+                <label for="gender-male">Male</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="gender-female" name="gender" value="female">
+                <label for="gender-female">Female</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="gender-diverse" name="gender" value="diverse">
+                <label for="gender-diverse">Diverse</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="gender-not-specified" name="gender" value="not_specified">
+                <label for="gender-not-specified">Prefer not to say</label>
+            </div>
+            <div class="error-message" id="gender-error">Please select a gender option</div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="vision-left">Vision Impairment (Left Eye, Diopter)</label>
+                    <input type="number" id="vision-left" name="vision_left" step="0.25" placeholder="e.g. -1.5 or +2.0">
+                    <div class="form-note">Leave blank if unknown or not applicable</div>
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="vision-right">Vision Impairment (Right Eye, Diopter)</label>
+                    <input type="number" id="vision-right" name="vision_right" step="0.25" placeholder="e.g. -1.5 or +2.0">
+                    <div class="form-note">Leave blank if unknown or not applicable</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Color Vision</label>
+            <div class="form-check">
+                <input type="radio" id="color-normal" name="color_vision" value="normal" checked>
+                <label for="color-normal">Normal color vision</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="color-red-green" name="color_vision" value="red_green_deficiency">
+                <label for="color-red-green">Red-green color deficiency (Deuteranopia/Protanopia)</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="color-blue-yellow" name="color_vision" value="blue_yellow_deficiency">
+                <label for="color-blue-yellow">Blue-yellow color deficiency (Tritanopia)</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="color-monochromacy" name="color_vision" value="monochromacy">
+                <label for="color-monochromacy">Monochromacy (complete color blindness)</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="color-unknown" name="color_vision" value="unknown">
+                <label for="color-unknown">Unknown</label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" id="back-button" class="btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Results
+            </button>
+            <button type="button" id="download-data-button" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download Results
+            </button>
+        </div>
+    </form>
+</div>
+
 <div class="footer">
-    Human-Computer Interaction - Reaction Test Study - Style-Sheet generated by v0.dev
+    <p>Human-Computer Interaction - Reaction Test Study - Designed with <a href="https://v0.dev" target="_blank" rel="noopener noreferrer" class="v0-link">v0.dev</a> &copy; 2025</p>
 </div>
 
 <script>
@@ -250,6 +590,10 @@
     let times = [];
     let distances = [];
 
+    // Trial counter
+    let trialCount = 0;
+    const MAX_TRIALS = 30;
+
     // DOM elements
     const timeElement = document.getElementById('time');
     const countElement = document.getElementById('count');
@@ -260,6 +604,21 @@
     const mistakesElement = document.getElementById('mistakes-value');
     const correlationElement = document.getElementById('correlation');
     const statusIndicator = document.getElementById('status-indicator');
+    const showDemographicsButton = document.getElementById('show-demographics-button');
+    const demographicsContainer = document.getElementById('demographics-container');
+    const mainContainer = document.getElementById('main-container');
+    const backButton = document.getElementById('back-button');
+    const downloadDataButton = document.getElementById('download-data-button');
+    const demographicsForm = document.getElementById('demographics-form');
+    const trialCounterElement = document.getElementById('trial-counter');
+
+    // Demographics form elements
+    const nameInput = document.getElementById('name');
+    const ageInput = document.getElementById('age');
+    const genderInputs = document.querySelectorAll('input[name="gender"]');
+    const nameError = document.getElementById('name-error');
+    const ageError = document.getElementById('age-error');
+    const genderError = document.getElementById('gender-error');
 
     function calculateDistanceToCenter(x, y) {
         const centerX = window.innerWidth / 2;
@@ -301,12 +660,14 @@
     }
 
     function getMean(data) {
+        if (data.length === 0) return 0;
         let sum = 0;
         for (let value of data) sum += value;
         return sum / data.length;
     }
 
     function getStandardDeviation(data) {
+        if (data.length === 0) return 0;
         let mean = getMean(data);
         let squareSum = 0;
         for (let value of data) squareSum += (value - mean) ** 2;
@@ -320,6 +681,9 @@
         stdDevElement.textContent = '-';
         mistakesElement.textContent = '-';
         correlationElement.textContent = '-';
+        showDemographicsButton.disabled = true;
+        trialCount = 0;
+        updateTrialCounter();
     }
 
     function showResults() {
@@ -335,11 +699,164 @@
         const correlation = calculateCorrelation(distances, times);
         correlationElement.textContent = correlation.toFixed(3);
 
+        // Enable demographics button if we have results
+        showDemographicsButton.disabled = times.length === 0;
+
         mistakes = 0; // Reset mistakes after showing results
     }
 
     function setStimulusColor(newColor) {
         stimulusElement.style.backgroundColor = newColor;
+    }
+
+    function getBrowserInfo() {
+        const userAgent = navigator.userAgent;
+        let browserName = "Unknown";
+        let browserVersion = "Unknown";
+        let osName = "Unknown";
+
+        // Detect browser
+        if (userAgent.indexOf("Firefox") > -1) {
+            browserName = "Mozilla Firefox";
+            browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("SamsungBrowser") > -1) {
+            browserName = "Samsung Internet";
+            browserVersion = userAgent.match(/SamsungBrowser\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+            browserName = "Opera";
+            browserVersion = userAgent.indexOf("Opera") > -1 ?
+                userAgent.match(/Opera\/([0-9.]+)/)[1] :
+                userAgent.match(/OPR\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Edg") > -1) {
+            browserName = "Microsoft Edge";
+            browserVersion = userAgent.match(/Edg\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Chrome") > -1) {
+            browserName = "Google Chrome";
+            browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Safari") > -1) {
+            browserName = "Apple Safari";
+            browserVersion = userAgent.match(/Version\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident") > -1) {
+            browserName = "Internet Explorer";
+            browserVersion = userAgent.indexOf("MSIE") > -1 ?
+                userAgent.match(/MSIE ([0-9.]+)/)[1] :
+                userAgent.match(/rv:([0-9.]+)/)[1];
+        }
+
+        // Detect OS
+        if (userAgent.indexOf("Windows") > -1) {
+            osName = "Windows";
+        } else if (userAgent.indexOf("Mac") > -1) {
+            osName = "MacOS";
+        } else if (userAgent.indexOf("Linux") > -1) {
+            osName = "Linux";
+        } else if (userAgent.indexOf("Android") > -1) {
+            osName = "Android";
+        } else if (userAgent.indexOf("iOS") > -1 || userAgent.indexOf("iPhone") > -1 || userAgent.indexOf("iPad") > -1) {
+            osName = "iOS";
+        }
+
+        return {
+            browser: browserName,
+            version: browserVersion,
+            os: osName,
+            userAgent: userAgent,
+            language: navigator.language,
+            screenWidth: window.screen.width,
+            screenHeight: window.screen.height,
+            devicePixelRatio: window.devicePixelRatio || 1
+        };
+    }
+
+    function validateDemographicsForm() {
+        let isValid = true;
+
+        // Validate name
+        if (!nameInput.value.trim()) {
+            nameError.classList.add('visible');
+            isValid = false;
+        } else {
+            nameError.classList.remove('visible');
+        }
+
+        // Validate age
+        if (!ageInput.value || ageInput.value < 1 || ageInput.value > 120) {
+            ageError.classList.add('visible');
+            isValid = false;
+        } else {
+            ageError.classList.remove('visible');
+        }
+
+        // Validate gender
+        let genderSelected = false;
+        genderInputs.forEach(input => {
+            if (input.checked) {
+                genderSelected = true;
+            }
+        });
+
+        if (!genderSelected) {
+            genderError.classList.add('visible');
+            isValid = false;
+        } else {
+            genderError.classList.remove('visible');
+        }
+
+        return isValid;
+    }
+
+    function saveResults() {
+        // Get demographic data from form
+        const demographicData = {
+            name: nameInput.value.trim(),
+            age: parseInt(ageInput.value),
+            gender: document.querySelector('input[name="gender"]:checked').value,
+            vision: {
+                left: document.getElementById('vision-left').value ? parseFloat(document.getElementById('vision-left').value) : null,
+                right: document.getElementById('vision-right').value ? parseFloat(document.getElementById('vision-right').value) : null
+            },
+            colorVision: document.querySelector('input[name="color_vision"]:checked').value,
+            browserInfo: getBrowserInfo()
+        };
+
+        // Create detailed results object with all raw data
+        const results = {
+            participant: demographicData,
+            summary: {
+                count: times.length,
+                mean: getMean(times),
+                standardDeviation: getStandardDeviation(times),
+                mistakes: mistakes,
+                correlation: calculateCorrelation(distances, times)
+            },
+            rawData: {
+                reactionTimes: times,
+                distances: distances,
+                timestamp: new Date().toISOString()
+            }
+        };
+
+        // Convert to formatted JSON
+        const json = JSON.stringify(results, null, 2);
+
+        // Create temporary download URL
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        // Create and trigger download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reaction_results_' + demographicData.name.replace(/\s+/g, '_').toLowerCase() + '_' + new Date().toISOString().slice(0,19).replace(/:/g,'-') + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Free memory
+        URL.revokeObjectURL(url);
+    }
+
+    function updateTrialCounter() {
+        trialCounterElement.textContent = `Trial: ${trialCount}/${MAX_TRIALS}`;
     }
 
     function startTestTrial() {
@@ -388,11 +905,21 @@
         setTimeout(() => {
             timeElement.classList.remove('pulse');
         }, 500);
+
+        // Increment trial count
+        trialCount++;
+        updateTrialCounter();
+
+        // Check if we've reached the maximum number of trials
+        if (trialCount >= MAX_TRIALS) {
+            stopExperiment();
+            return;
+        }
     }
 
     function startExperiment() {
         clearResults(); // clear results of any previous tests
-        instructionElement.innerHTML = "Watch for the <strong>red circle</strong> and press <span class='key-hint'>Space</span> when it appears!";
+        instructionElement.innerHTML = "Watch for the <strong>red square</strong> and press <span class='key-hint'>Space</span> when it appears!";
         statusIndicator.classList.add('active');
 
         // reset data and start tests
@@ -414,7 +941,21 @@
         showResults();
     }
 
+    function showDemographicsForm() {
+        mainContainer.classList.add('hidden');
+        demographicsContainer.classList.add('active');
+    }
+
+    function hideDemographicsForm() {
+        demographicsContainer.classList.remove('active');
+        mainContainer.classList.remove('hidden');
+    }
+
+    // Event listeners
     window.addEventListener('keydown', (event) => {
+        if (event.key === ' ' || event.code === 'Space') {
+            event.preventDefault();
+        }
         if (event.key === ' ') {
             if (!experimentActive) {
                 startExperiment();
@@ -429,12 +970,28 @@
                 mistakes++;
                 mistakesElement.textContent = mistakes;
             }
-        } else if (event.key === 'a') {
-            if (experimentActive) {
-                stopExperiment();
-            }
         }
     });
+
+    // Add event listener for demographics button
+    showDemographicsButton.addEventListener('click', showDemographicsForm);
+
+    // Add event listener for back button
+    backButton.addEventListener('click', hideDemographicsForm);
+
+    // Add event listener for download button
+    downloadDataButton.addEventListener('click', function() {
+        if (validateDemographicsForm()) {
+            saveResults();
+            hideDemographicsForm();
+        }
+    });
+
+    // Disable demographics button initially
+    showDemographicsButton.disabled = true;
+
+    // Initialize trial counter
+    updateTrialCounter();
 </script>
 </body>
 </html>
