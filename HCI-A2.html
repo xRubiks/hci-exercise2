@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1435,6 +1435,16 @@
                     startTestTrial();
                 } else {
                     mistakes++;
+                    
+                    // Increment trial count
+                    trialCount++;
+                    updateTrialCounter();
+
+                    // Check if we've reached the maximum number of trials
+                    if (trialCount >= MAX_TRIALS) {
+                        stopExperiment();
+                        return;
+                    }
                 }
             }
         }

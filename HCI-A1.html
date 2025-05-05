@@ -969,6 +969,16 @@
                 // Fehler erhöhen, wenn der Stimulus nicht sichtbar ist
                 mistakes++;
                 mistakesElement.textContent = mistakes;
+                
+                // Increment trial count
+                trialCount++;
+                updateTrialCounter();
+
+                // Check if we've reached the maximum number of trials
+                if (trialCount >= MAX_TRIALS) {
+                    stopExperiment();
+                    return;
+                }
             }
         }
     });
