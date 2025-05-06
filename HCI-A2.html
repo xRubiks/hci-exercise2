@@ -1435,7 +1435,10 @@
                     startTestTrial();
                 } else {
                     mistakes++;
-                    
+                }
+            }else {
+                    mistakes++;
+
                     // Increment trial count
                     trialCount++;
                     updateTrialCounter();
@@ -1446,7 +1449,6 @@
                         return;
                     }
                 }
-            }
         }
     });
 
