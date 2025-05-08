@@ -702,7 +702,6 @@
         // Enable demographics button if we have results
         showDemographicsButton.disabled = times.length === 0;
 
-        mistakes = 0; // Reset mistakes after showing results
     }
 
     function setStimulusColor(newColor) {
@@ -958,6 +957,7 @@
         }
         if (event.key === ' ') {
             if (!experimentActive) {
+                mistakes = 0; // Reset mistakes after showing results
                 startExperiment();
                 return;
             }
