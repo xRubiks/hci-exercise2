@@ -952,6 +952,9 @@
 
     // Event listeners
     window.addEventListener('keydown', (event) => {
+        if (demographicsContainer.classList.contains('active')) {
+            return; // Event-Handler beenden, wenn das Formular sichtbar ist
+        }
         if (event.key === ' ' || event.code === 'Space') {
             event.preventDefault();
         }
